@@ -47,8 +47,6 @@ const Checkout = (props) => {
     if (!formIsValid) {
       return;
     }
-
-    // Submit cart data
   };
 
   const nameControlClasses = `${classes.control} ${
