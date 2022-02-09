@@ -5,6 +5,8 @@ import MealItem from "./MealItem/MealItem";
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState();
 
   useEffect(() => {
     const fectchMeals = async () => {
@@ -19,12 +21,18 @@ const AvailableMeals = () => {
           name: responseData[key].name,
           description: responseData[key].description,
           price: responseData[key].price,
+          image: responseData[key].image
         });
       }
       setMeals(loadedMeals);
+      setIsLoading(false);
     };
-    fectchMeals();
-  });
+    fectchMeals().catch((error) => {
+      setIsLoading(false);
+      setHttpError(false);
+    });
+  }, []);
+
   const mealsList = meals.map((meal) => (
     <MealItem
       id={meal.id}
@@ -32,8 +40,25 @@ const AvailableMeals = () => {
       name={meal.name}
       price={meal.price}
       description={meal.description}
+      image={meal.image}
     />
   ));
+
+  if (isLoading) {
+    return (
+      <section className={classes.MealsLoading}>
+        <p>Loading...</p>
+      </section>
+    );
+  }
+
+  if (httpError) {
+    return (
+      <section className={classes.MealsError}>
+        <p>{httpError}</p>
+      </section>
+    );
+  }
 
   return (
     <section className={classes.meals}>
